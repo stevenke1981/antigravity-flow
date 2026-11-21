@@ -30,8 +30,15 @@ Two execution modes govern credit-consuming actions (generating images/Ingredien
 
 ### Detecting Mode from the User's Prompt
 
-- Automatically enable `auto` mode whenever the user's prompt signals unattended or batch execution in any language — for example: `"auto mode"`, `"full-auto"`, `"run unattended"`, `"without asking"`, `"don't ask for confirmation"`, or `"batch generate all"`.
+- Automatically enable `auto` mode whenever the user's prompt explicitly signals unattended execution without confirmation in any language — for example: `"auto mode"`, `"full-auto"`, `"run unattended"`, `"without asking"`, or `"don't ask for confirmation"`.
+- A request to batch-generate (e.g., `"generate all shots"`) does **not** by itself enable `auto` mode. Stay in `checkpoint` mode, present the whole batch with its total credit cost, and confirm once before starting.
 - If the user does not specify a mode, use `checkpoint` mode by default and mention that they can switch to `auto` mode at any time (e.g., by replying `"switch to auto mode"`).
+
+### Credit Budget & Live Pricing (Both Modes)
+
+- Credit costs depend on the model, the user's plan, and Flow's current pricing. Never assume an action is free; always read the live `Generating will use <N> credits` readout (or the price on a menu item such as `4K Upscaled · 50 credits`) before acting.
+- **Run ceiling in `auto` mode**: Before the first credit-consuming action, sum the live per-action readouts for the planned work (shots × outputs, Ingredients, Characters, Extends, edits, paid exports) and announce the estimated run total. If the user stated a budget (e.g., `"max 200 credits"`), that is the ceiling; otherwise the announced estimate is the ceiling.
+- Track cumulative spend, including automatic retries. Pause and ask the user before any action that would push cumulative spend past the ceiling.
 
 ## 4. Hard Safety & Platform Boundaries (Both Modes)
 
@@ -39,7 +46,9 @@ Even in `auto` mode, always pause and hand control to the user when the `browser
 
 - **Google Sign-In / Authentication**: Protected auth origins cannot be automated. Ask the user to sign in inside the browser pane, then resume the same `browser` subagent via `send_message`.
 - **CAPTCHA / Anti-Bot Verification**: Never attempt to solve or bypass challenges. Pause and ask the user to complete verification.
-- **Credit / Quota Exhaustion or Payment Pages (`PAYMENT_REQUIRED`)**: Pause and ask the user to top up or adjust the model tier (e.g., switch from Veo Quality to Veo Fast/Lite).
+- **Credit / Quota Exhaustion or Payment Pages (`PAYMENT_REQUIRED`)**: Pause and ask the user to top up or adjust the model tier (e.g., switch from `Omni 1.2 Flash` at `720p` to `360p` or `Veo 3.1 - Lite`).
+
+**Content policy / safety filter refusals** (both modes): Never rephrase, obfuscate, or otherwise alter a prompt to get around a Flow policy refusal. Log the blocked item with its refusal message, skip it, continue with the remaining work, and report every blocked item at the end so the user can decide how to revise it.
 
 ## 5. Local File Staging Contract
 

@@ -5,7 +5,8 @@ description: >-
   via Antigravity's built-in browser. Supports Omni 1.2 Flash and Veo 3.1 model
   selection, resolution/duration/output count configuration, exact pre-flight credit
   checks, batch storyboard execution, visual inspection, and downloading clips in
-  checkpoint or full-auto mode.
+  checkpoint or full-auto mode. Use when the user wants to render one or more shots,
+  run a storyboard.md batch, re-roll a take, or download generated clips from Google Flow.
 ---
 
 # Flow Generate (Shot Generation & Iteration)
@@ -25,10 +26,11 @@ Follow `rules/AGENTS.md`:
 
 Determine what is being generated:
 - **Single shot**: Prompt (including explicit camera direction and audio cues, since Flow has no separate Camera Control menu), Video type (`Ingredients` for Text-to-Video / Ingredients-to-Video, or `Frames` for Start/End keyframe animation), Ingredients (`@handles`), keyframes (if any), aspect ratio (`16:9` or `9:16`), model (`Omni 1.2 Flash`, `Veo 3.1 - Lite [Lower Priority]`, `Veo 3.1 - Lite`, etc.), resolution (`360p` / `720p` for Omni), duration (`4s` / `6s` / `8s` / `10s`), and output count (`x1`–`x4`).
-- **Batch from `storyboard.md`**: Read the shot list (`S01..Sn`) and note which shots are still pending.
+- **Batch from `storyboard.md`**: Read the shot list (`S01..Sn`) and select only shots whose `Status` is `pending` or `failed`, so an interrupted batch resumes where it stopped.
 - **Autonomy mode**:
   - Check the user's current prompt (and `storyboard.md` header) for full-auto cues in any language (e.g., `"auto mode"`, `"full-auto"`, `"run unattended"`, `"batch without asking"`).
-  - Default to `checkpoint` mode if unspecified.
+  - Default to `checkpoint` mode if unspecified. A plain batch request without full-auto cues stays in `checkpoint` mode.
+  - Note any credit ceiling from the prompt or the storyboard's `Credit Budget` header.
 
 ### Step 2: Stage Local Keyframes (If Using `Video` -> `Frames`)
 
@@ -47,15 +49,15 @@ Instruct the `browser` subagent to prepare the composer (without clicking `Start
      - `Ingredients` (for pure Text-to-Video with nothing attached, or Ingredients-to-Video using `+` `Add ingredients to the prompt box` / typing `@` -> filter tabs `All` / `Images` / `Videos` / `Voices` / `Characters` / `Avatars` / `Uploads` -> `Add to prompt`)
      - `Frames` (exposes `Start`, `Swap first and last frames`, and `End` slots in the prompt bar to upload or pick keyframes)
    - **Aspect ratio**: `16:9` or `9:16`
-   - **Model (`Select model family`)**: e.g., `Omni 1.2 Flash`, `Veo 3.1 - Lite [Lower Priority]` (0 credits on ULTRA), `Veo 3.1 - Lite`, or another requested model
+   - **Model (`Select model family`)**: e.g., `Omni 1.2 Flash`, `Veo 3.1 - Lite [Lower Priority]`, `Veo 3.1 - Lite`, or another requested model. Never select a model marked `Leaving <Date>`; if the storyboard names one, flag it and propose `Omni 1.2 Flash` instead.
    - **Resolution & Length / Duration**: e.g., `360p` or `720p` and `Length` slider for `Omni 1.2 Flash`, or `4s` / `6s` / `8s` for `Veo 3.1`
    - **Output count**: `x1`, `x2`, `x3`, or `x4`
 4. Read the exact live credit indicator at the bottom of the Settings popover: **`Generating will use <N> credits`**.
 
 ### Step 4: Pre-Generation Checkpoint (In `checkpoint` Mode Only)
 
-- **In `checkpoint` mode**: Present a concise pre-flight table (Shot ID, Video Type, Model, Resolution/Duration, Output Count, **exact credit cost from Flow UI**, Ingredients/Frames, Prompt summary) and ask the user to confirm before clicking **`Start generation`**. Also mention they can reply `"switch to auto mode"` to run the remaining shots without per-shot prompts.
-- **In `auto` mode**: Skip this confirmation and proceed directly to Step 5.
+- **In `checkpoint` mode**: Present a concise pre-flight table (Shot ID, Video Type, Model, Resolution/Duration, Output Count, **exact credit cost from Flow UI**, Ingredients/Frames, Prompt summary) and ask the user to confirm before clicking **`Start generation`**. Also mention they can reply `"switch to auto mode"` to run the remaining shots without per-shot prompts. For a batch, present all shots in one table with the total cost and confirm once.
+- **In `auto` mode**: Skip per-shot confirmation, but first announce the estimated run total (sum of live readouts) and the ceiling, per the Credit Budget rule in `rules/AGENTS.md`. Track cumulative spend through Step 6 and pause before any shot or retry that would exceed the ceiling.
 
 ### Step 5: Execute Shot Generation in Browser
 
@@ -77,11 +79,12 @@ Send semantic instructions to the `browser` subagent for each shot (or sequentia
   - `4K Upscaled · 50 credits` (consumes 50 credits — confirm first in `checkpoint` mode before selecting)
 - **In `checkpoint` mode**: Report the generated takes and ask whether to `Favorite` / keep, `Reuse prompt` to re-roll, switch model/resolution (e.g., `360p` -> `720p` on `Omni 1.2 Flash`), `Add to scene`, or `Download` (specifying resolution tier).
 - **In `auto` mode**:
-  - If a shot fails with a transient error, retry once automatically; if blocked by a safety/policy filter, lightly soften the phrasing once or log the block and continue with remaining shots.
+  - If a shot fails with a transient error, retry once automatically (counting the retry against the credit ceiling); mark it `failed` if the retry also fails.
+  - If a shot is blocked by a safety/policy filter, do **not** rephrase the prompt to get around it. Mark it `blocked`, continue with the remaining shots, and list every blocked shot with its refusal message in the final report.
   - `Favorite` the best take per shot (or click `More options` -> `Add to scene` if assembling next) and `Download` clips if local export was requested.
 
 ### Step 7: Sync Outputs & Status
 
-- Update shot status (e.g., `generated`, `favorited`, `added-to-scene`, `downloaded`) in `storyboard.md` if present.
+- Update each shot's `Status` field (`generated`, `favorited`, `added-to-scene`, `downloaded`, `blocked`, `failed`) in `storyboard.md` if present, and report the credits actually spent.
 - If clips were downloaded, copy/organize them into the requested local output directory (e.g., `./outputs/shots/S01.mp4`) with clean shot-numbered filenames.
 - Hand off to `flow-scene-builder` if the user wants to sequence, extend, edit, and export the final film.

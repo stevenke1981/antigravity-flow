@@ -1,11 +1,11 @@
 # Google Flow Live UI Audit Checklist
 
 - **Last Calibrated**: `2026-11-20`
-- **Latest Changelog Observed**: `11/19/2026 — Faster Flow Agent and smarter search in your projects` (`https://flow.google.com/changelogs`)
-- **Active Deprecations to Watch (Retiring Dec 5, 2026)**:
-  - `Omni 1.1 Flash` (`Leaving Dec 5`) — prune after Dec 5, 2026
-  - `Veo 3.1 - Fast` (`Leaving Dec 5`) — prune after Dec 5, 2026
-  - `Veo 3.1 - Quality` (`Leaving Dec 5`) — prune after Dec 5, 2026
+- **Latest Changelog Observed**: `2026-11-19 — Faster Flow Agent and smarter search in your projects` (`https://flow.google.com/changelogs`)
+- **Active Deprecations to Watch (Retiring 2026-12-05)**:
+  - `Omni 1.1 Flash` (`Leaving Dec 5`) — prune after 2026-12-05
+  - `Veo 3.1 - Fast` (`Leaving Dec 5`) — prune after 2026-12-05
+  - `Veo 3.1 - Quality` (`Leaving Dec 5`) — prune after 2026-12-05
 
 ## 7 Canonical Audit Surfaces (Strictly Read-Only, Zero Credits)
 
@@ -18,13 +18,13 @@
    - Record all entries newer than `Last Calibrated`.
    - Flag new models, UI redesigns, credit pricing changes, and deprecation announcements.
 
-3. **Project Workspace (`/project/<id>`)**
+3. **Project Workspace (`/project/<id>`)** — use an existing project; never create projects, Characters, or scenes during a sync
    - Top bar: `Home`, editable title, `More options for the project`, `Search`, `Filtering and sorting options`, `+` (`Add media menu`: `Upload`, `New collection`, `Create character`, `New scene`), `Settings`, `More options` (`Download project`, `View all changelogs`, etc.), `Account details` (credits & watermark toggle).
    - Left sidebar: `All media`, `Videos`, `Characters`, `Scenes`, `Library` (`+ Create collection`), `Tools`, `Create tool`, `Trash`.
    - Composer: `Flow Agent` toggle (`aria-pressed`) vs. Manual Mode.
 
 4. **Generation Settings (`Settings trigger` in Manual Mode)**
-   - **`Image` mode**: Aspect ratios (`16:9`, `4:3`, `1:1`, `3:4`, `9:16`), Models (`Nano Banana Pro`, `Nano Banana 2 Lite`, `Nano Banana 2.1`), `Thinking level` (`Low`/`Medium`/`High`), output counts (`x1`–`x4`), live credit readout.
+   - **`Image` mode**: Aspect ratios (`16:9`, `4:3`, `1:1`, `3:4`, `9:16`), Models (`Nano Banana Pro`, `Nano Banana 2 Lite`, `Nano Banana 2.1`), `Thinking level` (`Low`/`Medium`/`High`; record which models expose it), output counts (`x1`–`x4`), live credit readout.
    - **`Video` mode**: `Video type` (`Frames`, `Ingredients`), Aspect ratios (`16:9`, `9:16`), Models (`Omni 1.2 Flash`, `Veo 3.1 - Lite`, `Veo 3.1 - Lite [Lower Priority]`, plus check deprecation status of `Omni 1.1 Flash`, `Veo 3.1 - Fast`, `Veo 3.1 - Quality`), resolutions (`360p`/`720p`), durations (`4s`–`10s` / slider), output counts (`x1`–`x4`), live credit readout.
    - Check if any dedicated Camera Control or Audio panel has been introduced.
 

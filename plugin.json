@@ -1,17 +1,17 @@
 {
   "name": "antigravity-flow",
   "displayName": "Google Flow",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Operate Google Flow (flow.google.com) through Antigravity's built-in browser: plan storyboards, manage Characters and Ingredients, generate Omni/Veo shots, assemble Scenes, run or build Flow Tools, and keep skills synced with live Flow updates.",
   "logo": "assets/logo.svg",
   "suggestedPrompts": [
     "Plan a 4-shot sci-fi short film storyboard for Google Flow with consistent Characters and Ingredients",
     "Batch generate all shots from storyboard.md in Google Flow in full-auto mode and assemble them into a Scene",
-    "Audit the live Google Flow web UI with flow-sync to add new features and prune deprecated models"
+    "/flow-sync — audit the live Google Flow web UI to add new features and prune deprecated models"
   ],
   "author": {
-    "name": "WeZZard"
+    "name": "stevenke1981"
   },
   "homepage": "https://flow.google.com",
-  "repository": "https://github.com/WeZZard/antigravity-flow"
+  "repository": "https://github.com/stevenke1981/antigravity-flow"
 }

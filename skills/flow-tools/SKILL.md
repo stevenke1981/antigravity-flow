@@ -19,7 +19,7 @@ Follow `rules/AGENTS.md`:
 - Reuse the active Flow `browser` subagent (`send_message`) whenever one is open; otherwise open `https://flow.google.com/` directly (`Model: "flash"`) and run the Fast-Path Authentication Check.
 - Respect `checkpoint` vs. `auto` mode:
   - Browsing tools and **building a new custom tool in `Create tool`** currently cost **0 credits** (`"Creating tools does not currently cost credits"`).
-  - Running generative steps inside an opened tool may consume credits depending on the underlying model — confirm first in `checkpoint` mode when a tool action triggers paid generation.
+  - Running generative steps inside an opened tool may consume credits depending on the underlying model — confirm first in `checkpoint` mode when a tool action triggers paid generation; in `auto` mode, count it against the run's credit ceiling.
 
 ## Workflow A: Run an Existing Flow Tool (`Explore tools`)
 
