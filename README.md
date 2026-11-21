@@ -32,6 +32,24 @@ agy plugin validate . --strict
 
 Then manage or toggle the plugin on Antigravity's Customizations page.
 
+## Codex skill
+
+This repository also includes [`$antigravity-flow`](codex/skills/antigravity-flow/SKILL.md), a standalone Codex skill for storyboards, Characters and Ingredients, generation, scene editing and export, Tools, and read-only UI audits. In a connected Codex browser session it can operate Google Flow. Storyboards and prompt drafts also work offline.
+
+Copy the whole `codex/skills/antigravity-flow` directory into your user skills directory (`$CODEX_HOME/skills`, or `~/.codex/skills` if `CODEX_HOME` is unset). From this repository in PowerShell:
+
+```powershell
+$codexRoot = $env:CODEX_HOME
+if (-not $codexRoot) { $codexRoot = Join-Path $HOME '.codex' }
+$skillsDir = Join-Path $codexRoot 'skills'
+$destination = Join-Path $skillsDir 'antigravity-flow'
+if (Test-Path -LiteralPath $destination) { throw "Skill already installed: $destination" }
+New-Item -ItemType Directory -Path $skillsDir -Force | Out-Null
+Copy-Item -LiteralPath './codex/skills/antigravity-flow' -Destination $destination -Recurse
+```
+
+Start a Codex chat and use `$antigravity-flow`, for example: “Use $antigravity-flow to plan a four-shot Google Flow scene with a consistent character.”
+
 ## Included Customizations
 
 ### Rules (`rules/AGENTS.md`)

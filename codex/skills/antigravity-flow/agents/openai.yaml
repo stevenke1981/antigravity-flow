@@ -1,0 +1,4 @@
+interface:
+  display_name: "Google Flow (Antigravity workflows)"
+  short_description: "Storyboard, generate, and edit in Google Flow"
+  default_prompt: "Use $antigravity-flow to plan a storyboard and identify the Flow inputs for each shot."
