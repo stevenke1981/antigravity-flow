@@ -20,7 +20,7 @@ Follow `rules/AGENTS.md`:
 - Reuse the active Flow `browser` subagent (`send_message`) so the project tab and generated clip library remain open.
 - Respect `checkpoint` vs. `auto` mode:
   - Creating a scene, adding/reordering existing clips (`Add to scene`, `Add clip`), `Save frame`, and `Download media` do **not** consume credits and can run directly.
-  - **`Extend`** and inline video edits (`"Describe how to edit this video..."`) invoke video generation and **do** consume credits — confirm first in `checkpoint` mode, or run directly in `auto` mode.
+  - **`Extend`** and inline video edits (`"Describe how to edit this video..."`) invoke video generation and **do** consume credits — confirm first in `checkpoint` mode, or run directly in `auto` mode within the run's credit ceiling.
 
 ## Workflow
 
@@ -46,10 +46,13 @@ Instruct the `browser` subagent:
 
 - **Save frame** (no credits): Scrub to the desired timestamp in the player and click **`Save frame`** to capture a clean keyframe asset for downstream `Frames` generation.
 - **Extend** (consumes credits):
-  - In `checkpoint` mode: Confirm the extension prompt and model before triggering generation.
-  - In `auto` mode: Open the timeline **`Add clip`** menu -> select **`Extend`**, enter the continuation prompt, trigger generation, and verify the new segment attaches cleanly to the timeline.
+  1. Open the timeline **`Add clip`** menu -> select **`Extend`** and enter the continuation prompt.
+  2. Read the live credit cost. In `checkpoint` mode, pause and confirm the prompt, model, and cost with the user; in `auto` mode, check it against the run's credit ceiling.
+  3. Trigger generation and verify the new segment attaches cleanly to the timeline.
 - **In-place Video Edit** (consumes credits):
-  - In the editor's bottom composer (`"Describe how to edit this video..."`), optionally attach Ingredients via `+`, choose `Select model family` (`Omni 1.2 Flash`), and confirm (in `checkpoint` mode) or click **`Start generation`** (in `auto` mode).
+  1. In the editor's bottom composer (`"Describe how to edit this video..."`), enter the edit instruction, optionally attach Ingredients via `+`, and choose `Select model family` (`Omni 1.2 Flash`).
+  2. Read the live credit cost. In `checkpoint` mode, pause and confirm with the user; in `auto` mode, check it against the run's credit ceiling.
+  3. Click **`Start generation`** and verify the edited result appears without an error badge.
 
 ### Step 4: Preview & Download Final Video
 
@@ -63,5 +66,5 @@ Instruct the `browser` subagent:
 - Copy the downloaded final video from the browser download path into the user's requested workspace output directory (e.g., `./outputs/final/<title>.mp4`).
 - Report:
   - Final local file path (clickable markdown link)
-  - Included shots, extensions/edits performed, and scene URL
+  - Included shots, extensions/edits performed (with credits spent), and scene URL
   - Any shots that were skipped or need manual fine-tuning in the browser pane.

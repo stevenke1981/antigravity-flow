@@ -36,14 +36,14 @@ Prefer single, deliberate movements over conflicting instructions:
 
 ## 5. Model & Credit Strategy (Google Flow)
 
-Always check the live credit readout (`Generating will use <N> credits`) inside Flow's Settings popover before generating:
+Always check the live credit readout (`Generating will use <N> credits`) inside Flow's Settings popover before generating — costs vary by model and plan, so never assume an action is free:
 
 - **Image Ingredients**:
-  - `Nano Banana 2.1` (default, often 0 credits on ULTRA) — fast, high quality, supports `Thinking level` (`Low` / `Medium` / `High`).
+  - `Nano Banana 2.1` (default) — fast, high quality; set `Thinking level` (`Low` / `Medium` / `High`) when the Settings popover exposes it for the selected model.
   - `Nano Banana 2 Lite` — lightweight drafts.
   - `Nano Banana Pro` — complex compositions or typography.
 - **Video Generation**:
   - `Omni 1.2 Flash` — newest flagship for character/scene consistency and fewer jump cuts; supports `360p` (faster drafts) and `720p` (final), with adjustable `Length` slider.
-  - `Veo 3.1 - Lite [Lower Priority]` — **0 credits** on ULTRA; ideal for zero-cost blocking and timing tests (`4s` / `6s` / `8s`).
+  - `Veo 3.1 - Lite [Lower Priority]` — cheapest tier (may be 0 credits on some plans); ideal for low-cost blocking and timing tests (`4s` / `6s` / `8s`).
   - `Veo 3.1 - Lite` — low-cost faster iteration (`4s` / `6s` / `8s`).
-  - Legacy tiers (`Omni 1.1 Flash`, `Veo 3.1 - Fast`, `Veo 3.1 - Quality`) — check deprecation tags in the dropdown (e.g., `Leaving Dec 5`) and verify credit cost before selecting.
+  - Retiring tiers (`Omni 1.1 Flash`, `Veo 3.1 - Fast`, `Veo 3.1 - Quality`, marked `Leaving Dec 5`) — retiring 2026-12-05; do not use them in new plans.

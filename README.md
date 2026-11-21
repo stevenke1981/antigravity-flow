@@ -7,14 +7,21 @@ An Antigravity plugin that packages **Google Flow** ([flow.google.com](https://f
 ### From GitHub (Recommended)
 
 ```bash
-agy plugin install https://github.com/WeZZard/antigravity-flow
+agy plugin install https://github.com/stevenke1981/antigravity-flow
 ```
 
 ### Local Development (Symlink)
 
 ```bash
-git clone https://github.com/WeZZard/antigravity-flow.git
+git clone https://github.com/stevenke1981/antigravity-flow.git
 ln -s "$(pwd)/antigravity-flow" ~/.gemini/config/plugins/antigravity-flow
+```
+
+On Windows (PowerShell), use a directory junction instead (no admin rights required):
+
+```powershell
+git clone https://github.com/stevenke1981/antigravity-flow.git
+cmd /c mklink /J "$env:USERPROFILE\.gemini\config\plugins\antigravity-flow" "$PWD\antigravity-flow"
 ```
 
 Validate the plugin manifest and structure locally:
@@ -32,7 +39,8 @@ Always-on operating contract when the plugin is enabled:
 - Opens `https://flow.google.com/` directly (avoiding legacy redirect hops) and delegates all Flow UI operations to Antigravity's built-in `browser` subagent (`Model: "flash"`), reusing the same tab/session via `send_message`.
 - Runs a **Fast-Path Authentication Check** using above-the-fold visual, DOM (`Account details`, `+ New project`, `/project/<id>`), and network (`batchexecute` HTTP `200`) signals to skip unnecessary sign-in prompts when already signed in.
 - Supports **Checkpoint Mode** (default: reads live `Generating will use <N> credits` and confirms before clicking `Start generation` or paid `4K Upscaled · 50 credits` exports) and **Full-Auto Mode** (automatically triggered from prompt cues like `"auto mode"`, `"full-auto"`, `"run unattended"`, or equivalent phrasing in any language).
-- Enforces hard safety pauses for Google sign-in, CAPTCHA, and quota/payment walls.
+- Enforces a **credit budget**: costs are always read live from Flow (never assumed free), and Full-Auto runs announce an estimated total and pause before exceeding it or a user-stated ceiling (e.g., `"max 200 credits"`).
+- Enforces hard safety pauses for Google sign-in, CAPTCHA, and quota/payment walls. Policy-blocked prompts are logged and skipped, never rephrased to get around the filter.
 - Standardizes local file staging for uploads (`browser_sandbox/uploads/`) and visual references (`browser_sandbox/references/`).
 
 ### Skills (`skills/`)
@@ -46,4 +54,4 @@ Always-on operating contract when the plugin is enabled:
 ## Autonomy Modes
 
 - **Checkpoint Mode (default)**: The agent plans prompts, stages local assets, switches Flow to Manual Mode (`Flow Agent` OFF), configures model/resolution/duration, and reports the exact credit cost (`Generating will use <N> credits`) before clicking `Start generation` or choosing `4K Upscaled · 50 credits`.
-- **Full-Auto Mode**: Mention `"auto mode"`, `"full-auto"`, `"run unattended"`, or `"without asking"` (or the equivalent in any language) in your prompt, or reply `"switch to auto mode"` mid-session, to execute Character/Ingredient setup, multi-shot generation, Scene assembly, and downloads end-to-end. The agent will still pause whenever manual Google sign-in, CAPTCHA, or credit/payment intervention is required.
+- **Full-Auto Mode**: Mention `"auto mode"`, `"full-auto"`, `"run unattended"`, or `"without asking"` (or the equivalent in any language) in your prompt, or reply `"switch to auto mode"` mid-session, to execute Character/Ingredient setup, multi-shot generation, Scene assembly, and downloads end-to-end. The agent first announces the estimated run total and pauses before exceeding it (or a ceiling you state, e.g., `"auto mode, max 200 credits"`); it also still pauses whenever manual Google sign-in, CAPTCHA, or credit/payment intervention is required. A plain batch request (`"generate all shots"`) without these cues stays in Checkpoint Mode with a single batch-level confirmation.
